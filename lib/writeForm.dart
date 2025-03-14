@@ -35,70 +35,92 @@ class _WriteFormState extends State<_WriteForm> {
 
   @override
   Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildTextField(_nameController, "이름", "이름을 입력하세요"),
+              _buildTextField(_phoneNumberController, "전화번호", "전화번호를 입력하세요"),
+              _buildTextField(_emailController, "이메일", "이메일을 입력하세요"),
+              _buildTextField(_nicknameController, "닉네임", "닉네임을 입력하세요"),
+              _buildMemoField(_memoController, "메모", "메모를 입력하세요"),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    createInfo();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    backgroundColor: Colors.white, // 버튼 배경색
+                    foregroundColor: Colors.blue, // 버튼 텍스트 및 아이콘 색상
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Text('정보 추가'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 기본 TextFormField 스타일을 위한 메소드
+  Widget _buildTextField(
+    TextEditingController controller,
+    String label,
+    String hint,
+  ) {
     return Container(
-      child: Form(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: "이름",
-                  hintText: "이름을 입력하세요",
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _phoneNumberController,
-                decoration: InputDecoration(
-                  labelText: "전화번호",
-                  hintText: "전화번호를 입력하세요",
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: "이메일",
-                  hintText: "이메일을 입력하세요",
-                ),
-                keyboardType: TextInputType.emailAddress, // 이메일 입력 모드
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _nicknameController,
-                decoration: InputDecoration(
-                  labelText: "닉네임",
-                  hintText: "닉네임을 입력하세요",
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _memoController,
-                decoration: InputDecoration(
-                  labelText: "메모",
-                  hintText: "메모를 입력하세요",
-                ),
-              ),
-            ),
-            SizedBox(
-              child: ElevatedButton(
-                onPressed: () {
-                  createInfo();
-                },
-                child: Text('정보 추가'),
-              ),
-            ),
-          ],
+      margin: EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 메모 입력 필드 스타일을 위한 메소드
+  Widget _buildMemoField(
+    TextEditingController controller,
+    String label,
+    String hint,
+  ) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        controller: controller,
+        maxLines: 4,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.blue),
+          ),
         ),
       ),
     );
@@ -114,14 +136,19 @@ class _WriteFormState extends State<_WriteForm> {
         name: _nameController.text,
         phone_number: _phoneNumberController.text,
         email: _emailController.text,
-        nickname: _nicknameController.text,
-        memo: _memoController.text,
+        // nickname: _nicknameController.text,
+        // memo: _memoController.text,
+        nickname:
+            _nicknameController.text.isEmpty ? null : _nicknameController.text,
+        memo: _memoController.text.isEmpty ? null : _memoController.text,
       );
 
       final response = await dio.post(
         apiEndpoint + "/insert",
         data: phoneAppVo.toJson(),
       );
+      // [연경] - 위의 주소 오류로 아래 사용(연경만)
+      // final response = await dio.post(apiEndpoint, data: phoneAppVo.toJson());
 
       if (response.statusCode == 200) {
         Navigator.pushNamed(context, "/");
