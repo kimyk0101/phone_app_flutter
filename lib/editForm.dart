@@ -42,11 +42,13 @@ class _EditFormState extends State<_EditForm> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null && args.containsKey('id')) {
       _phoneAppId = args['id'];
-      getPhoneApp(_phoneAppId!);
+      getPhoneApp(_phoneAppId); // nullable 타입으로 전달
     }
   }
 
-  void getPhoneApp(int _phoneAppId) async {
+  void getPhoneApp(int? _phoneAppId) async {
+    if (_phoneAppId == null) return;
+
     try {
       var dio = Dio();
       dio.options.headers['Content-Type'] = "application/json";
@@ -54,14 +56,23 @@ class _EditFormState extends State<_EditForm> {
       final response = await dio.get("$apiEndpoint/$_phoneAppId");
 
       if (response.statusCode == 200) {
-        _nameController.text = response.data["name"];
-        _phoneNumberController.text = response.data["phoneNumber"];
-        _emailController.text = response.data["email"];
-        _nicknameController.text = response.data["nickname"];
-        _memoController.text = response.data["memo"];
+        setState(() {
+          _nameController.text = response.data["name"] ?? '';
+          String phone_number = response.data["phone_number"] ?? '';
+
+          // 전화번호 형식 변환 필요시 여기서 처리
+          // 예: 국제 형식에서 지역 형식으로 변환
+
+          _phoneNumberController.text = phone_number;
+          _emailController.text = response.data["email"] ?? '';
+          _nicknameController.text = response.data["nickname"] ?? '';
+          _memoController.text = response.data["memo"] ?? '';
+        });
       }
     } catch (e) {
-      throw Exception("데이터를 불러오지 못했습니다.:$e");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('데이터를 불러오지 못했습니다.')));
     }
   }
 
@@ -99,6 +110,7 @@ class _EditFormState extends State<_EditForm> {
                   labelText: "이메일",
                   hintText: "이메일을 입력하세요",
                 ),
+                keyboardType: TextInputType.emailAddress, // 이메일 입력 모드
               ),
             ),
             Container(
@@ -143,14 +155,14 @@ class _EditFormState extends State<_EditForm> {
       PhoneAppVo phoneAppVo = PhoneAppVo(
         id: _phoneAppId!,
         name: _nameController.text,
-        phoneNumber: _phoneNumberController.text,
+        phone_number: _phoneNumberController.text,
         email: _emailController.text,
         nickname: _nicknameController.text,
         memo: _memoController.text,
       );
 
-      final response = await dio.put(
-        "$apiEndpoint/$_phoneAppId",
+      final response = await dio.patch(
+        "$apiEndpoint/modify/$_phoneAppId",
         data: phoneAppVo.toJson(),
       );
 

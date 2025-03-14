@@ -1,7 +1,7 @@
 class PhoneAppVo {
   int id;
   String name;
-  String phoneNumber;
+  String phone_number;
   String email;
   String? nickname;
   String? memo;
@@ -9,7 +9,7 @@ class PhoneAppVo {
   PhoneAppVo({
     required this.id,
     required this.name,
-    required this.phoneNumber,
+    required this.phone_number,
     required this.email,
     this.nickname,
     this.memo,
@@ -27,7 +27,7 @@ class PhoneAppVo {
     return PhoneAppVo(
       id: apiData['id'] as int,
       name: apiData['name'] as String,
-      phoneNumber: apiData['phone_number'] as String,
+      phone_number: apiData['phone_number'] as String,
       email: apiData['email'] as String,
       nickname: apiData['nickname'] as String? ?? '',
       memo: apiData['memo'] as String? ?? '',
@@ -38,7 +38,7 @@ class PhoneAppVo {
     return {
       'id': id,
       'name': name,
-      'phoneNumber': phoneNumber,
+      'phone_number': phone_number,
       'email': email,
       'nickname': nickname,
       'memo': memo,

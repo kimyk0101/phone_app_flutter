@@ -25,10 +25,8 @@ class _WriteForm extends StatefulWidget {
 }
 
 class _WriteFormState extends State<_WriteForm> {
-  // 상수
   static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
 
-  // TextEditingController를 사용하여 텍스트 필드의 입력 값을 관리
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -69,6 +67,7 @@ class _WriteFormState extends State<_WriteForm> {
                   labelText: "이메일",
                   hintText: "이메일을 입력하세요",
                 ),
+                keyboardType: TextInputType.emailAddress, // 이메일 입력 모드
               ),
             ),
             Container(
@@ -113,7 +112,7 @@ class _WriteFormState extends State<_WriteForm> {
       PhoneAppVo phoneAppVo = PhoneAppVo(
         id: 0,
         name: _nameController.text,
-        phoneNumber: _phoneNumberController.text,
+        phone_number: _phoneNumberController.text,
         email: _emailController.text,
         nickname: _nicknameController.text,
         memo: _memoController.text,

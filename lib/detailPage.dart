@@ -31,7 +31,7 @@ class DetailPage extends StatelessWidget {
               child: Column(
                 children: [
                   Text("이름: ${phoneAppVo.name}"),
-                  Text("전화번호: ${phoneAppVo.phoneNumber}"),
+                  Text("전화번호: ${phoneAppVo.phone_number}"),
                   Text("이메일: ${phoneAppVo.email}"),
                   Text("닉네임: ${phoneAppVo.nickname ?? ''}"),
                   Text("메모: ${phoneAppVo.memo ?? ''}"),

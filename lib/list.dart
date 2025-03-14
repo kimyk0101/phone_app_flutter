@@ -77,7 +77,7 @@ class _PhoneAppListState extends State<_PhoneAppList> {
       if (_searchType == 'name') {
         return item.name.toLowerCase().contains(_searchQuery.toLowerCase());
       } else {
-        return item.phoneNumber.toLowerCase().contains(
+        return item.phone_number.toLowerCase().contains(
           _searchQuery.toLowerCase(),
         );
       }
@@ -111,7 +111,7 @@ class _PhoneAppListState extends State<_PhoneAppList> {
                 value: _searchType,
                 items: [
                   DropdownMenuItem(child: Text('이름'), value: 'name'),
-                  DropdownMenuItem(child: Text('전화번호'), value: 'phoneNumber'),
+                  DropdownMenuItem(child: Text('전화번호'), value: 'phone_number'),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -120,12 +120,6 @@ class _PhoneAppListState extends State<_PhoneAppList> {
                 },
               ),
               SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                child: Text('검색'),
-              ),
             ],
           ),
         ),
@@ -152,7 +146,7 @@ class _PhoneAppListState extends State<_PhoneAppList> {
     return Card(
       child: ListTile(
         title: Text(phoneAppVo.name, overflow: TextOverflow.ellipsis),
-        subtitle: Text(phoneAppVo.phoneNumber),
+        subtitle: Text(phoneAppVo.phone_number),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -222,15 +216,23 @@ class _PhoneAppListState extends State<_PhoneAppList> {
     try {
       var dio = Dio();
       dio.options.headers['Content-Type'] = "application/json";
-      final response = await dio.delete("$apiEndpoint/$id");
+      final response = await dio.delete("$apiEndpoint/delete/$id");
 
-      if (response.statusCode != 200) {
+      if (response.statusCode != 204) {
         throw Exception("API 서버 오류");
       }
+
+      if (mounted) {
+        setState(() {
+          fetchPhoneAppList(); // 목록 새로고침
+        });
+      }
     } catch (e) {
-      setState(() {
-        errorMessage = "삭제에 실패했습니다.: $e";
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "삭제에 실패했습니다.: $e";
+        });
+      }
     }
   }
 }
