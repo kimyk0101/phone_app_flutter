@@ -94,26 +94,10 @@ class _PhoneAppListState extends State<_PhoneAppList> {
     }).toList();
   }
 
-  // // 검색어에 맞춰 목록 필터링
-  // List<PhoneAppVo>? filterPhoneAppList() {
-  //   if (_searchQuery.isEmpty) return phoneAppList;
-  //
-  //   return phoneAppList?.where((item) {
-  //     if (_searchType == 'name') {
-  //       return item.name.toLowerCase().contains(_searchQuery.toLowerCase());
-  //     } else {
-  //       return item.phoneNumber.toLowerCase().contains(
-  //         _searchQuery.toLowerCase(),
-  //       );
-  //     }
-  //   }).toList();
-  // }
-  //
-
-  // // 숫자인지 체크하는 함수
-  // bool isNumeric(String str) {
-  //   return int.tryParse(str) != null;
-  // }
+  // 숫자인지 체크하는 함수
+  bool isNumeric(String str) {
+    return int.tryParse(str) != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +111,7 @@ class _PhoneAppListState extends State<_PhoneAppList> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    labelText: '🔍 검색',
+                    hintText: '🔍 검색',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(
                       vertical: 10,
@@ -138,29 +122,15 @@ class _PhoneAppListState extends State<_PhoneAppList> {
                     setState(() {
                       _searchQuery = text;
 
-                      // if (isNumeric(text)) {
-                      //   _searchType = 'phoneNumber';
-                      // } else {
-                      //   _searchType = 'name';
-                      // }
+                      if (isNumeric(text)) {
+                        _searchType = 'phone_number';
+                      } else {
+                        _searchType = 'name';
+                      }
                     });
                   },
                 ),
               ),
-              SizedBox(width: 10),
-              DropdownButton<String>(
-                value: _searchType,
-                items: [
-                  DropdownMenuItem(child: Text('이름'), value: 'name'),
-                  DropdownMenuItem(child: Text('전화번호'), value: 'phone_number'),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _searchType = value ?? 'name';
-                  });
-                },
-              ),
-              SizedBox(width: 10),
             ],
           ),
         ),
@@ -185,13 +155,6 @@ class _PhoneAppListState extends State<_PhoneAppList> {
 
   Widget _buildListItem(PhoneAppVo phoneAppVo) {
     return GestureDetector(
-      // onTap: () {
-      //   Navigator.pushNamed(
-      //     context,
-      //     "/detail",
-      //     arguments: {"id": phoneAppVo.id},
-      //   );
-      // },
       onTap: () async {
         final result = await Navigator.pushNamed(
           context,
@@ -226,98 +189,3 @@ class _PhoneAppListState extends State<_PhoneAppList> {
     );
   }
 }
-
-//   Widget _buildListItem(PhoneAppVo phoneAppVo) {
-//     return Card(
-//       child: ListTile(
-//         title: Text(phoneAppVo.name, overflow: TextOverflow.ellipsis),
-//         subtitle: Text(phoneAppVo.phone_number),
-//         trailing: Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             IconButton(
-//               icon: Icon(Icons.edit),
-//               onPressed: () async {
-//                 await Navigator.pushNamed(
-//                   context,
-//                   "/update",
-//                   arguments: {"id": phoneAppVo.id},
-//                 );
-//                 fetchPhoneAppList(); // 목록 새로고침
-//               },
-//             ),
-//             IconButton(
-//               icon: Icon(Icons.delete),
-//               onPressed: () async {
-//                 try {
-//                   await deletePhoneAppItem(phoneAppVo.id);
-//                   fetchPhoneAppList(); // 목록 새로고침
-//                 } catch (e) {
-//                   // 삭제 실패 시 뒤로가기 버튼 표시
-//                   showDialog(
-//                     context: context,
-//                     builder: (context) {
-//                       return AlertDialog(
-//                         title: Text("삭제 실패"),
-//                         content: Text("삭제에 실패했습니다. 다시 시도해 주세요."),
-//                         actions: [
-//                           TextButton(
-//                             onPressed: () {
-//                               Navigator.of(context).pop();
-//                             },
-//                             child: Text("확인"),
-//                           ),
-//                           TextButton(
-//                             onPressed: () {
-//                               Navigator.of(context).pop();
-//                               Navigator.of(context).pop(); // 목록으로 돌아가기
-//                             },
-//                             child: Text("목록으로 돌아가기"),
-//                           ),
-//                         ],
-//                       );
-//                     },
-//                   );
-//                 }
-//               },
-//             ),
-//             IconButton(
-//               icon: Icon(Icons.info),
-//               onPressed: () async {
-//                 await Navigator.pushNamed(
-//                   context,
-//                   "/detail",
-//                   arguments: {"id": phoneAppVo.id},
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Future<void> deletePhoneAppItem(int id) async {
-//     try {
-//       var dio = Dio();
-//       dio.options.headers['Content-Type'] = "application/json";
-//       final response = await dio.delete("$apiEndpoint/delete/$id");
-//
-//       if (response.statusCode != 204) {
-//         throw Exception("API 서버 오류");
-//       }
-//
-//       if (mounted) {
-//         setState(() {
-//           fetchPhoneAppList(); // 목록 새로고침
-//         });
-//       }
-//     } catch (e) {
-//       if (mounted) {
-//         setState(() {
-//           errorMessage = "삭제에 실패했습니다.: $e";
-//         });
-//       }
-//     }
-//   }
-// }
