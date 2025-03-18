@@ -22,8 +22,11 @@ class PhoneAppList extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, "/insert");
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        child: Icon(
+          Icons.add,
+          color: Colors.white, // 아이콘 색상을 하얀색으로 설정
+        ),
+        backgroundColor: Colors.blue, // 배경색 파란색
         tooltip: '전화번호 추가',
       ),
     );
@@ -182,18 +185,33 @@ class _PhoneAppListState extends State<_PhoneAppList> {
 
   Widget _buildListItem(PhoneAppVo phoneAppVo) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
+      // onTap: () {
+      //   Navigator.pushNamed(
+      //     context,
+      //     "/detail",
+      //     arguments: {"id": phoneAppVo.id},
+      //   );
+      // },
+      onTap: () async {
+        final result = await Navigator.pushNamed(
           context,
           "/detail",
           arguments: {"id": phoneAppVo.id},
         );
+
+        if (result == true) {
+          // ✅ DetailPage에서 삭제 후 돌아오면 리스트 새로고침
+          fetchPhoneAppList();
+        }
       },
       child: Card(
         margin: EdgeInsets.symmetric(vertical: 5),
         elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15), // 테두리를 둥글게
+        ),
         child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           title: Text(
             phoneAppVo.name,
             overflow: TextOverflow.ellipsis,

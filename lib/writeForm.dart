@@ -143,12 +143,12 @@ class _WriteFormState extends State<_WriteForm> {
         memo: _memoController.text.isEmpty ? null : _memoController.text,
       );
 
-      final response = await dio.post(
-        apiEndpoint + "/insert",
-        data: phoneAppVo.toJson(),
-      );
+      // final response = await dio.post(
+      // apiEndpoint + "/insert",
+      // data: phoneAppVo.toJson(),
+      // );
       // [연경] - 위의 주소 오류로 아래 사용(연경만)
-      // final response = await dio.post(apiEndpoint, data: phoneAppVo.toJson());
+      final response = await dio.post(apiEndpoint, data: phoneAppVo.toJson());
 
       if (response.statusCode == 200) {
         Navigator.pushNamed(context, "/");

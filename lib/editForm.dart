@@ -78,71 +78,58 @@ class _EditFormState extends State<_EditForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Form(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: "이름",
-                  hintText: "이름을 입력하세요",
-                ),
-              ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            controller: _nameController,
+            decoration: InputDecoration(labelText: "이름", hintText: "이름을 입력하세요"),
+          ),
+          SizedBox(height: 10), // 간격을 3px로 설정
+          TextFormField(
+            controller: _phoneNumberController,
+            decoration: InputDecoration(
+              labelText: "전화번호",
+              hintText: "전화번호를 입력하세요",
             ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _phoneNumberController,
-                decoration: InputDecoration(
-                  labelText: "전화번호",
-                  hintText: "전화번호를 입력하세요",
-                ),
-              ),
+          ),
+          SizedBox(height: 10), // 간격을 3px로 설정
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              labelText: "이메일",
+              hintText: "이메일을 입력하세요",
             ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: "이메일",
-                  hintText: "이메일을 입력하세요",
-                ),
-                keyboardType: TextInputType.emailAddress, // 이메일 입력 모드
-              ),
+            keyboardType: TextInputType.emailAddress, // 이메일 입력 모드
+          ),
+          SizedBox(height: 10), // 간격을 3px로 설정
+          TextFormField(
+            controller: _nicknameController,
+            decoration: InputDecoration(
+              labelText: "닉네임",
+              hintText: "닉네임을 입력하세요",
             ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _nicknameController,
-                decoration: InputDecoration(
-                  labelText: "닉네임",
-                  hintText: "닉네임을 입력하세요",
-                ),
-              ),
+          ),
+          SizedBox(height: 10), // 간격을 3px로 설정
+          TextFormField(
+            controller: _memoController,
+            decoration: InputDecoration(labelText: "메모", hintText: "메모를 입력하세요"),
+          ),
+          SizedBox(height: 20),
+          TextButton(
+            onPressed: updatePhoneApp,
+            child: Text("수정", style: TextStyle(color: Colors.blue)), // 글자색 파랑
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.white, // 배경색 하얀색
+              side: BorderSide(color: Colors.blue), // 테두리 파란색
+              padding: EdgeInsets.symmetric(
+                vertical: 12,
+                horizontal: 30,
+              ), // 버튼 크기 조정
             ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: _memoController,
-                decoration: InputDecoration(
-                  labelText: "메모",
-                  hintText: "메모를 입력하세요",
-                ),
-              ),
-            ),
-            SizedBox(
-              child: ElevatedButton(
-                onPressed: () {
-                  updatePhoneApp();
-                },
-                child: Text("수정"),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -251,8 +251,8 @@ class DetailPage extends StatelessWidget {
                       onPressed:
                           () => Navigator.pushNamed(
                             context,
-                            '/edit',
-                            arguments: {'id': phoneAppId}, // String 그대로 전달
+                            '/update',
+                            arguments: {'id': phoneAppId},
                           ),
                     ),
                   ),
@@ -270,7 +270,7 @@ class DetailPage extends StatelessWidget {
                   _buildContactRow("메모", phoneAppVo.memo ?? '없음'),
                   // Delete Button
                   SizedBox(height: 20),
-                  ContactDeleteButton(phoneAppId: phoneAppId),
+                  DeletePhoneAppButton(phoneAppId: phoneAppId),
                 ],
               ),
             );
@@ -315,85 +315,93 @@ Widget _buildContactRow(String label, String value) {
   );
 }
 
-class ContactDeleteButton extends StatefulWidget {
+class DeletePhoneAppButton extends StatelessWidget {
   final int phoneAppId;
-  const ContactDeleteButton({super.key, required this.phoneAppId});
-
-  @override
-  _ContactDeleteButtonState createState() => _ContactDeleteButtonState();
-}
-
-class _ContactDeleteButtonState extends State<ContactDeleteButton> {
-  bool _isHovered = false; // Hover 상태를 추적
+  const DeletePhoneAppButton({super.key, required this.phoneAppId});
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) {
-        setState(() {
-          _isHovered = true; // 마우스가 들어오면 hover 상태를 true로 변경
-        });
-      },
-      onExit: (_) {
-        setState(() {
-          _isHovered = false; // 마우스가 나가면 hover 상태를 false로 변경
-        });
-      },
-      child: TextButton(
-        onPressed: () => deletePhoneAppItem(context, widget.phoneAppId),
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.blue, // 텍스트 색 파란색
-          backgroundColor:
-              _isHovered ? Colors.grey[300] : Colors.white, // hover 시 배경색 변경
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
-          side: BorderSide(color: Colors.transparent), // 테두리 없애기
-        ),
-        child: Text("연락처 삭제", style: TextStyle(fontSize: 18)),
+    return TextButton(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.blue, // 글자 색 파란색
+        backgroundColor: Colors.white, // 배경 색 흰색
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        side: BorderSide(color: Colors.blue), // 파란색 테두리 추가
       ),
-    );
-  }
-
-
-Future<void> deletePhoneAppItem(
-  BuildContext context,
-  int phoneAppId,
-  Function refreshList,
-) async {
-  try {
-    var dio = Dio();
-    dio.options.headers['Content-Type'] = "application/json";
-    final response = await dio.delete(
-      "http://10.0.2.2:8090/api/phoneApp/delete/$phoneAppId",
-    );
-
-    print("Response Status: ${response.statusCode}");
-    if (response.statusCode == 204) {
-      refreshList(); // 리스트 갱신 함수 호출
-      Navigator.pop(context); // 삭제 후 목록으로 돌아가기
-    } else {
-      throw Exception("삭제 실패: ${response.statusCode}");
-    }
-  } catch (e) {
-    print("Error: $e"); // 에러 로그 출력
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("삭제 실패"),
-          content: Text("삭제에 실패했습니다. 다시 시도해 주세요."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("확인"),
-            ),
-          ],
+      onPressed: () async {
+        bool confirmDelete = await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("삭제 확인"),
+              content: Text("정말 삭제하시겠습니까?"),
+              actions: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.blue,
+                    backgroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    side: BorderSide(color: Colors.transparent), // 테두리 제거
+                  ),
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text("취소"),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  ),
+                  onPressed: () async {
+                    await deletePhoneAppItem(context, phoneAppId);
+                    Navigator.pop(context, true);
+                  },
+                  child: Text("삭제"),
+                ),
+              ],
+            );
+          },
         );
+
+        if (confirmDelete == true) {
+          Navigator.pop(context, true);
+        }
       },
+      child: Text("연락처 삭제"),
     );
   }
 
+  Future<void> deletePhoneAppItem(BuildContext context, int phoneAppId) async {
+    try {
+      var dio = Dio();
+      dio.options.headers['Content-Type'] = "application/json";
+      final response = await dio.delete(
+        "http://10.0.2.2:8090/api/phoneApp/delete/$phoneAppId",
+      );
 
-
-
+      if (response.statusCode == 204) {
+        Navigator.pop(context); // 삭제 후 이전 화면으로 이동
+      } else {
+        throw Exception("삭제 실패: ${response.statusCode}");
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("삭제 실패"),
+            content: Text("삭제에 실패했습니다. 다시 시도해 주세요."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("확인"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+}
