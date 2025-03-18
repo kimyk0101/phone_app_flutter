@@ -1,3 +1,16 @@
+/**
+ * ${PHONEAPP}
+ *  FileName : ${editForm.dart}
+ * Class: ${EditForm}.
+ * Created by ${승룡}.
+ * Created On ${3.14}.
+ * Description: 연락처 수정 폼
+ *
+ * 필수 필드 (id, name, phone_number, email) - Null || 공백 불가 -> 경고 메세지
+ * 선택적 필드 (nickname, memo) - Null 가능
+ * nickname과 memo - Null 일 경우 공백으로 처리
+ */
+
 import 'package:flutter/material.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';
 import 'package:dio/dio.dart';
@@ -57,16 +70,28 @@ class _EditFormState extends State<_EditForm> {
 
       if (response.statusCode == 200) {
         setState(() {
-          _nameController.text = response.data["name"] ?? '';
+          // 서버에서 받은 값
+          String name = response.data["name"] ?? '';
           String phone_number = response.data["phone_number"] ?? '';
+          String email = response.data["email"] ?? '';
+          String nickname = response.data["nickname"] ?? ''; // 공백 처리
+          String memo = response.data["memo"] ?? ''; // 공백 처리
 
-          // 전화번호 형식 변환 필요시 여기서 처리
-          // 예: 국제 형식에서 지역 형식으로 변환
+          // 필수 필드 체크: null 또는 공백이면 수정 불가
+          if (name.isEmpty || phone_number.isEmpty || email.isEmpty) {
+            // 필수 값이 비어있는 경우 경고 메시지
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("이름, 전화번호, 이메일은 필수 입력 사항입니다.")),
+            );
+            return; // 수정 불가
+          }
 
+          // 필수 값이 채워진 경우에만 수정 가능
+          _nameController.text = name;
           _phoneNumberController.text = phone_number;
-          _emailController.text = response.data["email"] ?? '';
-          _nicknameController.text = response.data["nickname"] ?? '';
-          _memoController.text = response.data["memo"] ?? '';
+          _emailController.text = email;
+          _nicknameController.text = nickname;
+          _memoController.text = memo;
         });
       }
     } catch (e) {
@@ -74,6 +99,35 @@ class _EditFormState extends State<_EditForm> {
         context,
       ).showSnackBar(SnackBar(content: Text('데이터를 불러오지 못했습니다.')));
     }
+  }
+
+  void onSaveButtonPressed() {
+    // 필수 값이 null이나 공백인 경우 수정 불가
+    if (_nameController.text.isEmpty ||
+        _phoneNumberController.text.isEmpty ||
+        _emailController.text.isEmpty) {
+      // 필수 입력 값이 비어 있을 때 경고 메시지
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("필수 입력 사항"),
+            content: Text("이름, 전화번호, 이메일은 필수 입력 사항입니다."),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // 경고창 닫기
+                },
+                child: Text("확인"),
+              ),
+            ],
+          );
+        },
+      );
+      return; // 수정되지 않도록 return으로 종료
+    }
+    // 필수 값이 모두 채워졌다면 수정 저장
+    updatePhoneApp(); // 데이터를 서버에 전송하는 함수 호출
   }
 
   @override
@@ -118,7 +172,8 @@ class _EditFormState extends State<_EditForm> {
           ),
           SizedBox(height: 20),
           TextButton(
-            onPressed: updatePhoneApp,
+            onPressed:
+                onSaveButtonPressed, // onPressed에서 직접 updatePhoneApp()을 호출하지 않음
             child: Text("수정", style: TextStyle(color: Colors.blue)), // 글자색 파랑
             style: TextButton.styleFrom(
               backgroundColor: Colors.white, // 배경색 하얀색

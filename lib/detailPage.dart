@@ -1,3 +1,15 @@
+/**
+ * ${PHONEAPP}
+ *  FileName : ${detailPage.dart}
+ * Class: ${DetailPage}.
+ * Created by ${승룡}.
+ * Created On ${3.14}.
+ * Description: 연락처 상세정보, 연락처 수정 및 연락처 삭제 기능
+ *
+ * 연락처 삭제 -> 리스트 화면에서 최신 목록 불러와서 반영
+ * 연락처 수정 -> 연락처 수정 폼으로 이동
+ */
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';

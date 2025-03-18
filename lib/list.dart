@@ -1,3 +1,12 @@
+/**
+ * ${PHONEAPP}
+ *  FileName : ${list.dart}
+ * Class: ${PhoneAppList}.
+ * Created by ${승룡}.
+ * Created On ${3.14}.
+ * Description: 연락처 목록 불러오기, 연락처 추가 기능 및 검색 기능
+ */
+
 import 'package:flutter/material.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';
 import 'package:dio/dio.dart';

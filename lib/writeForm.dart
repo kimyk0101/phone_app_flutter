@@ -1,3 +1,15 @@
+/**
+ * ${PHONEAPP}
+ *  FileName : ${writeForm.dart}
+ * Class: ${WriteForm}.
+ * Created by ${승룡}.
+ * Created On ${3.14}.
+ * Description: 연락처 추가 폼
+ *
+ * 필수 필드 (id, name, phone_number, email) - Null 불가
+ * 선택적 필드 (nickname, memo) - Null 가능
+ */
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';
@@ -143,11 +155,13 @@ class _WriteFormState extends State<_WriteForm> {
         memo: _memoController.text.isEmpty ? null : _memoController.text,
       );
 
+      //  - apiPoint가 그냥 apiEndpoint/insert 일 경우 아래의 주소로
       // final response = await dio.post(
       // apiEndpoint + "/insert",
       // data: phoneAppVo.toJson(),
       // );
-      // [연경] - 위의 주소 오류로 아래 사용(연경만)
+
+      // [연경] - apiPoint가 그냥 apiEndpoint일 경우 아래의 주소로
       final response = await dio.post(apiEndpoint, data: phoneAppVo.toJson());
 
       if (response.statusCode == 200) {

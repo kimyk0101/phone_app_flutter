@@ -1,3 +1,14 @@
+/**
+ * ${PHONEAPP}
+ *  FileName : ${phoneAppVo.dart}
+ *  Class: ${PhoneAppVo}.
+ *  Created by ${승룡}.
+ *  Created On ${3.14}.
+ *  Description: 전화번호 관리 애플리케이션에서 사용되는 VO 클래스
+ *
+ *  필수 필드 (id, name, phone_number, email)와 선택적 필드 (nickname, memo)
+ */
+
 class PhoneAppVo {
   int id;
   String name;
