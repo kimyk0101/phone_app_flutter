@@ -90,7 +90,8 @@ class DetailPage extends StatelessWidget {
       var dio = Dio();
       dio.options.headers['Content-Type'] = "application/json";
       final response = await dio.get(
-        "http://10.0.2.2:8090/api/phoneApp/$phoneAppId",
+        // "http://10.0.2.2:8090/api/phoneApp/$phoneAppId",
+        "http://43.202.55.123:28088/api/phoneApp/$phoneAppId",
       );
 
       if (response.statusCode == 200) {
@@ -181,7 +182,8 @@ class DeletePhoneAppButton extends StatelessWidget {
       var dio = Dio();
       dio.options.headers['Content-Type'] = "application/json";
       final response = await dio.delete(
-        "http://10.0.2.2:8090/api/phoneApp/delete/$phoneAppId",
+        // "http://10.0.2.2:8090/api/phoneApp/delete/$phoneAppId",
+        "http://43.202.55.123:28088/api/phoneApp/delete/$phoneAppId",
       );
 
       if (response.statusCode == 204) {

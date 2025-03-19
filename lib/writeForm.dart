@@ -37,7 +37,8 @@ class _WriteForm extends StatefulWidget {
 }
 
 class _WriteFormState extends State<_WriteForm> {
-  static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
+  // static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
+  static const String apiEndpoint = "http://43.202.55.123:28088/api/phoneApp";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();

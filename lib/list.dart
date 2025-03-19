@@ -50,7 +50,8 @@ class _PhoneAppList extends StatefulWidget {
 }
 
 class _PhoneAppListState extends State<_PhoneAppList> {
-  static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
+  // static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
+  static const String apiEndpoint = "http://43.202.55.123:28088/api/phoneApp";
   List<PhoneAppVo>? phoneAppList;
   bool isLoading = true;
   String? errorMessage;
