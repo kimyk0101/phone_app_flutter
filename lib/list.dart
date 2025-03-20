@@ -8,8 +8,10 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';
 import 'package:dio/dio.dart';
+import 'package:rive/rive.dart';
 
 class PhoneAppList extends StatelessWidget {
   const PhoneAppList({super.key});
@@ -19,10 +21,10 @@ class PhoneAppList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("전화번호부 리스트"),
-        backgroundColor: Colors.blueGrey[700],
+        backgroundColor: Colors.lightBlueAccent,
       ),
       body: Container(
-        color: Colors.blue[100],
+        color: Colors.white,
         // padding: EdgeInsets.only(top: 50),
         padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
         child: _PhoneAppList(),
@@ -35,7 +37,7 @@ class PhoneAppList extends StatelessWidget {
           Icons.add,
           color: Colors.white, // 아이콘 색상을 하얀색으로 설정
         ),
-        backgroundColor: Colors.blue, // 배경색 파란색
+        backgroundColor: Colors.blueGrey, // 배경색 파란색
         tooltip: '전화번호 추가',
       ),
     );
@@ -51,7 +53,7 @@ class _PhoneAppList extends StatefulWidget {
 
 class _PhoneAppListState extends State<_PhoneAppList> {
   // static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
-  static const String apiEndpoint = "http://43.202.55.123:28088/api/phoneApp";
+  static const String apiEndpoint = "http://3.36.112.4:28088/api/phoneApp";
   List<PhoneAppVo>? phoneAppList;
   bool isLoading = true;
   String? errorMessage;
@@ -155,7 +157,9 @@ class _PhoneAppListState extends State<_PhoneAppList> {
                   : ListView.builder(
                     itemCount: filterPhoneAppList()!.length,
                     itemBuilder: (context, index) {
-                      return _buildListItem(filterPhoneAppList()![index]);
+                      return _buildListItem(
+                        filterPhoneAppList()![index],
+                      ).animate().fadeIn(duration: 500.ms);
                     },
                   ),
         ),
@@ -178,13 +182,22 @@ class _PhoneAppListState extends State<_PhoneAppList> {
         }
       },
       child: Card(
+        color: Colors.lightBlueAccent,
         margin: EdgeInsets.symmetric(vertical: 5),
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15), // 테두리를 둥글게
         ),
         child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          // contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          leading: SizedBox(
+            width: 50,
+            height: 50,
+            child: RiveAnimation.asset(
+              'assets/animations/bear_avatar_remix.riv',
+              fit: BoxFit.cover,
+            ),
+          ),
           title: Text(
             phoneAppVo.name,
             overflow: TextOverflow.ellipsis,
@@ -192,7 +205,7 @@ class _PhoneAppListState extends State<_PhoneAppList> {
           ),
           subtitle: Text(
             phoneAppVo.phone_number,
-            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            style: TextStyle(fontSize: 12),
           ),
         ),
       ),

@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';
 import 'package:dio/dio.dart';
 
@@ -23,7 +24,7 @@ class EditForm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("정보 수정"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.lightBlueAccent,
       ),
       body: _EditForm(),
     );
@@ -41,7 +42,7 @@ class _EditFormState extends State<_EditForm> {
   late int? _phoneAppId;
 
   // static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
-  static const String apiEndpoint = "http://43.202.55.123:28088/api/phoneApp";
+  static const String apiEndpoint = "http://3.36.112.4:28088/api/phoneApp";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -135,57 +136,65 @@ class _EditFormState extends State<_EditForm> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: <Widget>[
-          TextFormField(
-            controller: _nameController,
-            decoration: InputDecoration(labelText: "이름", hintText: "이름을 입력하세요"),
-          ),
-          SizedBox(height: 10), // 간격을 3px로 설정
-          TextFormField(
-            controller: _phoneNumberController,
-            decoration: InputDecoration(
-              labelText: "전화번호",
-              hintText: "전화번호를 입력하세요",
-            ),
-          ),
-          SizedBox(height: 10), // 간격을 3px로 설정
-          TextFormField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              labelText: "이메일",
-              hintText: "이메일을 입력하세요",
-            ),
-            keyboardType: TextInputType.emailAddress, // 이메일 입력 모드
-          ),
-          SizedBox(height: 10), // 간격을 3px로 설정
-          TextFormField(
-            controller: _nicknameController,
-            decoration: InputDecoration(
-              labelText: "닉네임",
-              hintText: "닉네임을 입력하세요",
-            ),
-          ),
-          SizedBox(height: 10), // 간격을 3px로 설정
-          TextFormField(
-            controller: _memoController,
-            decoration: InputDecoration(labelText: "메모", hintText: "메모를 입력하세요"),
-          ),
-          SizedBox(height: 20),
-          TextButton(
-            onPressed:
-                onSaveButtonPressed, // onPressed에서 직접 updatePhoneApp()을 호출하지 않음
-            child: Text("수정", style: TextStyle(color: Colors.blue)), // 글자색 파랑
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.white, // 배경색 하얀색
-              side: BorderSide(color: Colors.blue), // 테두리 파란색
-              padding: EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 30,
-              ), // 버튼 크기 조정
-            ),
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            TextFormField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: "이름",
+                hintText: "이름을 입력하세요",
+              ),
+            ).animate().fadeIn(duration: 500.ms),
+            SizedBox(height: 10), // 간격을 3px로 설정
+            TextFormField(
+              controller: _phoneNumberController,
+              decoration: InputDecoration(
+                labelText: "전화번호",
+                hintText: "전화번호를 입력하세요",
+              ),
+            ).animate().fadeIn(duration: 500.ms),
+            SizedBox(height: 10), // 간격을 3px로 설정
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: "이메일",
+                hintText: "이메일을 입력하세요",
+              ),
+              keyboardType: TextInputType.emailAddress, // 이메일 입력 모드
+            ).animate().fadeIn(duration: 500.ms),
+            SizedBox(height: 10), // 간격을 3px로 설정
+            TextFormField(
+              controller: _nicknameController,
+              decoration: InputDecoration(
+                labelText: "닉네임",
+                hintText: "닉네임을 입력하세요",
+              ),
+            ).animate().fadeIn(duration: 500.ms),
+            SizedBox(height: 10), // 간격을 3px로 설정
+            TextFormField(
+              controller: _memoController,
+              decoration: InputDecoration(
+                labelText: "메모",
+                hintText: "메모를 입력하세요",
+              ),
+            ).animate().fadeIn(duration: 500.ms),
+            SizedBox(height: 20),
+            TextButton(
+              onPressed:
+                  onSaveButtonPressed, // onPressed에서 직접 updatePhoneApp()을 호출하지 않음
+              child: Text("수정", style: TextStyle(color: Colors.blue)), // 글자색 파랑
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white, // 배경색 하얀색
+                side: BorderSide(color: Colors.blue), // 테두리 파란색
+                padding: EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 30,
+                ), // 버튼 크기 조정
+              ),
+            ).animate().fadeIn(duration: 500.ms),
+          ],
+        ),
       ),
     );
   }
@@ -210,7 +219,7 @@ class _EditFormState extends State<_EditForm> {
       );
 
       if (response.statusCode == 200) {
-        Navigator.pushNamed(context, "/");
+        Navigator.pushNamed(context, "/home");
       } else {
         throw Exception("API 서버 오류 입니다.");
       }

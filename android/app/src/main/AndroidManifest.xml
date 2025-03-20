@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="phone_app_flutter"
+        android:label="전화번호부"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

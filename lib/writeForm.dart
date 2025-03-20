@@ -12,6 +12,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';
 
 class WriteForm extends StatelessWidget {
@@ -22,7 +23,7 @@ class WriteForm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("전화번호 추가"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.lightBlueAccent,
       ),
       body: _WriteForm(),
     );
@@ -38,7 +39,7 @@ class _WriteForm extends StatefulWidget {
 
 class _WriteFormState extends State<_WriteForm> {
   // static const String apiEndpoint = "http://10.0.2.2:8090/api/phoneApp";
-  static const String apiEndpoint = "http://43.202.55.123:28088/api/phoneApp";
+  static const String apiEndpoint = "http://3.36.112.4:28088/api/phoneApp";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -55,11 +56,31 @@ class _WriteFormState extends State<_WriteForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _buildTextField(_nameController, "이름", "이름을 입력하세요"),
-              _buildTextField(_phoneNumberController, "전화번호", "전화번호를 입력하세요"),
-              _buildTextField(_emailController, "이메일", "이메일을 입력하세요"),
-              _buildTextField(_nicknameController, "닉네임", "닉네임을 입력하세요"),
-              _buildMemoField(_memoController, "메모", "메모를 입력하세요"),
+              _buildTextField(
+                _nameController,
+                "이름",
+                "이름을 입력하세요",
+              ).animate().fadeIn(duration: 500.ms),
+              _buildTextField(
+                _phoneNumberController,
+                "전화번호",
+                "전화번호를 입력하세요",
+              ).animate().fadeIn(duration: 500.ms),
+              _buildTextField(
+                _emailController,
+                "이메일",
+                "이메일을 입력하세요",
+              ).animate().fadeIn(duration: 500.ms),
+              _buildTextField(
+                _nicknameController,
+                "닉네임",
+                "닉네임을 입력하세요",
+              ).animate().fadeIn(duration: 500.ms),
+              _buildMemoField(
+                _memoController,
+                "메모",
+                "메모를 입력하세요",
+              ).animate().fadeIn(duration: 500.ms),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -75,7 +96,7 @@ class _WriteFormState extends State<_WriteForm> {
                     ),
                   ),
                   child: Text('정보 추가'),
-                ),
+                ).animate().fadeIn(duration: 500.ms),
               ),
             ],
           ),
@@ -166,7 +187,7 @@ class _WriteFormState extends State<_WriteForm> {
       final response = await dio.post(apiEndpoint, data: phoneAppVo.toJson());
 
       if (response.statusCode == 200) {
-        Navigator.pushNamed(context, "/");
+        Navigator.pushNamed(context, "/home");
       } else {
         throw Exception("정보 추가 실패하였습니다.: ${response.statusCode}");
       }

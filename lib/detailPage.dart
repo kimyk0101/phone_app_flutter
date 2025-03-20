@@ -13,6 +13,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:phone_app_flutter/phoneAppVo.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:rive/rive.dart';
 
 class DetailPage extends StatelessWidget {
   const DetailPage({super.key});
@@ -26,10 +28,11 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("상세 정보"),
+        backgroundColor: Colors.lightBlueAccent,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.blue),
           onPressed: () {
-            Navigator.popUntil(context, ModalRoute.withName("/"));
+            Navigator.pop(context);
           },
         ),
       ),
@@ -48,34 +51,54 @@ class DetailPage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // Edit Button (오른쪽 상단)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: Icon(Icons.edit, color: Colors.blue),
-                      onPressed:
-                          () => Navigator.pushNamed(
-                            context,
-                            '/update',
-                            arguments: {'id': phoneAppId},
-                          ),
+                  //  큰 아이콘 표시
+                  SizedBox(
+                    width: 150,
+                    height: 150,
+                    child: RiveAnimation.asset(
+                      'assets/animations/bear_avatar_remix.riv',
+                      fit: BoxFit.cover,
                     ),
                   ),
+                  SizedBox(height: 20),
                   // Contact Name
                   Text(
                     phoneAppVo.name,
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
-                  ),
+                  ).animate().shimmer(delay: 4000.ms, duration: 1800.ms),
                   SizedBox(height: 20),
+                  IconButton(
+                    icon: Icon(Icons.edit, color: Colors.blue),
+                    onPressed:
+                        () => Navigator.pushNamed(
+                          context,
+                          '/update',
+                          arguments: {'id': phoneAppId},
+                        ),
+                  ).animate().shake(hz: 4, curve: Curves.easeInOutCubic),
                   // Contact Info
-                  _buildContactRow("전화번호", phoneAppVo.phone_number),
-                  _buildContactRow("이메일", phoneAppVo.email),
-                  _buildContactRow("닉네임", phoneAppVo.nickname ?? '없음'),
-                  _buildContactRow("메모", phoneAppVo.memo ?? '없음'),
+                  _buildContactRow(
+                    "📞 전화번호",
+                    phoneAppVo.phone_number,
+                  ).animate().slideX(duration: 700.ms),
+                  _buildContactRow(
+                    "📧 이메일",
+                    phoneAppVo.email,
+                  ).animate().slideX(duration: 700.ms),
+                  _buildContactRow(
+                    "👤 닉네임",
+                    phoneAppVo.nickname ?? '없음',
+                  ).animate().slideX(duration: 700.ms),
+                  _buildContactRow(
+                    "📝 메모",
+                    phoneAppVo.memo ?? '없음',
+                  ).animate().slideX(duration: 700.ms),
                   // Delete Button
-                  SizedBox(height: 20),
-                  DeletePhoneAppButton(phoneAppId: phoneAppId),
+                  SizedBox(height: 10),
+                  DeletePhoneAppButton(
+                    phoneAppId: phoneAppId,
+                  ).animate().rotate(),
                 ],
               ),
             );
@@ -91,7 +114,7 @@ class DetailPage extends StatelessWidget {
       dio.options.headers['Content-Type'] = "application/json";
       final response = await dio.get(
         // "http://10.0.2.2:8090/api/phoneApp/$phoneAppId",
-        "http://43.202.55.123:28088/api/phoneApp/$phoneAppId",
+        "http://3.36.112.4:28088/api/phoneApp/$phoneAppId",
       );
 
       if (response.statusCode == 200) {
@@ -109,14 +132,21 @@ class DetailPage extends StatelessWidget {
 Widget _buildContactRow(String label, String value) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Row(
-      children: [
-        Text(
-          "$label: ",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Text(value, style: TextStyle(fontSize: 18)),
-      ],
+    child: Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueGrey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Text(
+            "$label: ",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          Text(value, style: TextStyle(fontSize: 24)),
+        ],
+      ),
     ),
   );
 }
@@ -183,7 +213,7 @@ class DeletePhoneAppButton extends StatelessWidget {
       dio.options.headers['Content-Type'] = "application/json";
       final response = await dio.delete(
         // "http://10.0.2.2:8090/api/phoneApp/delete/$phoneAppId",
-        "http://43.202.55.123:28088/api/phoneApp/delete/$phoneAppId",
+        "http://3.36.112.4:28088/api/phoneApp/delete/$phoneAppId",
       );
 
       if (response.statusCode == 204) {
